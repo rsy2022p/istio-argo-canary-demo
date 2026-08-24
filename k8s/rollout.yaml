@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: product
+  namespace: canary-demo
+spec:
+  replicas: 4
+
+  revisionHistoryLimit: 3
+
+  selector:
+    matchLabels:
+      app: product
+
+  template:
+    metadata:
+      labels:
+        app: product
+    spec:
+      containers:
+        - name: product
+          image: hashicorp/http-echo:1.0
+          args:
+            - "-text=PRODUCT VERSION 2 - CANARY"
+          ports:
+            - name: http
+              containerPort: 5678
+
+  strategy:
+    canary:
+      stableService: product-stable
+      canaryService: product-canary
+
+      trafficRouting:
+        istio:
+          virtualService:
+            name: product
+            routes:
+              - primary
+
+      steps:
+        - setWeight: 10
+        - pause:
+            duration: 30s
+
+        - setWeight: 30
+        - pause:
+            duration: 30s
+
+        - setWeight: 50
+        - pause:
+            duration: 30s

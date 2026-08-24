@@ -1,0 +1,59 @@
+name: Istio Argo Canary Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    name: Deploy Canary
+    runs-on: self-hosted
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify runner
+        run: |
+          echo "Runner: $(hostname)"
+          echo "User: $(whoami)"
+          kubectl version --client
+          kubectl config current-context
+
+      - name: Verify Kubernetes cluster
+        run: |
+          kubectl cluster-info
+          kubectl get nodes
+
+      - name: Verify Argo Rollouts
+        run: |
+          kubectl argo rollouts version
+          kubectl get pods -n argo-rollouts
+
+      - name: Verify Istio
+        run: |
+          istioctl version
+          istioctl proxy-status
+
+      - name: Apply stable service
+        run: |
+          kubectl apply -f k8s/service-stable.yaml
+
+      - name: Apply canary service
+        run: |
+          kubectl apply -f k8s/service-canary.yaml
+
+      - name: Apply Istio VirtualService
+        run: |
+          kubectl apply -f k8s/virtual-service.yaml
+
+      - name: Deploy Argo Rollout
+        run: |
+          kubectl apply -f k8s/rollout.yaml
+
+      - name: Wait for rollout
+        run: |
+          kubectl argo rollouts get rollout product \
+            -n canary-demo \
+            --watch
