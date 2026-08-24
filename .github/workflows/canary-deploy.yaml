@@ -51,9 +51,12 @@ jobs:
       - name: Deploy Argo Rollout
         run: |
           kubectl apply -f k8s/rollout.yaml
-
       - name: Wait for rollout
         run: |
-          kubectl argo rollouts get rollout product \
-            -n canary-demo \
-            --watch
+          kubectl argo rollouts status product \
+          -n canary-demo \
+          --timeout 10m
+      - name: Verify deployment
+        run: |
+          kubectl argo rollouts get rollout product -n canary-demo
+          kubectl get pods -n canary-demo -l app=product -o wide
