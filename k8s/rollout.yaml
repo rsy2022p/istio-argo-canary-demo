@@ -48,12 +48,12 @@ spec:
     spec:
       containers:
         - name: product
-          image: ghcr.io/rsy2022p/istio-argo-canary-demo:product-v4
+          image: ghcr.io/rsy2022p/istio-argo-canary-demo:product-0e28af5
           imagePullPolicy: IfNotPresent
 
           env:
             - name: VERSION
-              value: "v4"
+              value: "product-0e28af5"
 
           ports:
             - name: http
