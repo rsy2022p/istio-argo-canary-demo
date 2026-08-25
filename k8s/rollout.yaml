@@ -23,13 +23,13 @@ spec:
       containers:
         - name: product
 
-          image: product:v2
+          image: product:v3
 
           imagePullPolicy: IfNotPresent
 
           env:
             - name: VERSION
-              value: "v2"
+              value: "v3"
 
           ports:
             - name: http
