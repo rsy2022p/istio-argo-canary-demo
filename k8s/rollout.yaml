@@ -7,16 +7,10 @@ metadata:
 spec:
   replicas: 4
 
-  revisionHistoryLimit: 3
-
-  selector:
-    matchLabels:
-      app: product
-
   strategy:
     canary:
-      stableService: product-stable
       canaryService: product-canary
+      stableService: product-stable
 
       trafficRouting:
         istio:
@@ -28,17 +22,17 @@ spec:
       steps:
         - setWeight: 10
         - pause: {}
-
         - setWeight: 30
         - pause: {}
-
         - setWeight: 50
         - pause: {}
-
         - setWeight: 70
         - pause: {}
-
         - setWeight: 100
+
+  selector:
+    matchLabels:
+      app: product
 
   template:
     metadata:
@@ -46,14 +40,19 @@ spec:
         app: product
 
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+
       containers:
         - name: product
+
           image: ghcr.io/rsy2022p/istio-argo-canary-demo:product-0e28af5
+
           imagePullPolicy: IfNotPresent
 
           env:
             - name: VERSION
-              value: "product-0e28af5"
+              value: "v4"
 
           ports:
             - name: http
