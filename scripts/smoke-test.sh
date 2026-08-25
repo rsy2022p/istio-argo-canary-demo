@@ -1,19 +1,20 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-set -euo pipefail
+set -e
 
-NAMESPACE="${NAMESPACE:-canary-demo}"
-SERVICE="${SERVICE:-product-stable}"
+echo "Checking product service..."
 
-echo "Running smoke test"
-echo "Namespace : ${NAMESPACE}"
-echo "Service   : ${SERVICE}"
+for i in $(seq 1 10); do
 
-kubectl run smoke-test \
-  -n "${NAMESPACE}" \
-  --rm \
-  -i \
-  --restart=Never \
-  --image=curlimages/curl:8.10.1 \
-  -- \
-  curl -fsS "http://${SERVICE}/"
+    response=$(curl -s http://product)
+
+    echo "Request $i: $response"
+
+    if [ -z "$response" ]; then
+        echo "ERROR: Empty response"
+        exit 1
+    fi
+
+done
+
+echo "Smoke test passed"
