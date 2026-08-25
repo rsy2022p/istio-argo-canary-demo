@@ -31,6 +31,6 @@ class Handler(BaseHTTPRequestHandler):
 
 server = HTTPServer(("0.0.0.0", 8080), Handler)
 
-print(f"Starting product application version {VERSION}")
+print(f"Starting PRODUCT application version {VERSION}")
 
 server.serve_forever()
