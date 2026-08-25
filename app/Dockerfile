@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY app.py .
 
-ENV VERSION=v2
+ENV VERSION=v4
 
 EXPOSE 8080
 

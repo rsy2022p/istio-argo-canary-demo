@@ -1,6 +1,5 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
-
 metadata:
   name: product
   namespace: canary-demo
@@ -14,6 +13,33 @@ spec:
     matchLabels:
       app: product
 
+  strategy:
+    canary:
+      stableService: product-stable
+      canaryService: product-canary
+
+      trafficRouting:
+        istio:
+          virtualService:
+            name: product
+            routes:
+              - primary
+
+      steps:
+        - setWeight: 10
+        - pause: {}
+
+        - setWeight: 30
+        - pause: {}
+
+        - setWeight: 50
+        - pause: {}
+
+        - setWeight: 70
+        - pause: {}
+
+        - setWeight: 100
+
   template:
     metadata:
       labels:
@@ -22,14 +48,12 @@ spec:
     spec:
       containers:
         - name: product
-
-          image: product:v3
-
+          image: product:v4
           imagePullPolicy: IfNotPresent
 
           env:
             - name: VERSION
-              value: "v3"
+              value: "v4"
 
           ports:
             - name: http
@@ -48,37 +72,3 @@ spec:
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
-
-  strategy:
-
-    canary:
-
-      stableService: product-stable
-
-      canaryService: product-canary
-
-      trafficRouting:
-        istio:
-          virtualService:
-            name: product
-            routes:
-              - primary
-
-      steps:
-
-        - setWeight: 10
-
-        - pause:
-            duration: 30s
-
-        - setWeight: 30
-
-        - pause:
-            duration: 30s
-
-        - setWeight: 50
-
-        - pause:
-            duration: 30s
-
-        - setWeight: 100
