@@ -5,7 +5,9 @@ metadata:
   namespace: canary-demo
 spec:
   hosts:
-    - product
+    - product.canary-demo.example.com
+  gateways:
+    - product-gateway
   http:
     - name: primary
       route:
@@ -14,7 +16,6 @@ spec:
             port:
               number: 80
           weight: 100
-
         - destination:
             host: product-canary
             port:
