@@ -12,12 +12,12 @@ spec:
     - name: primary
       route:
         - destination:
-            host: product-stable
+            host: product-stable.canary-demo.svc.cluster.local
             port:
               number: 80
           weight: 100
         - destination:
-            host: product-canary
+            host: product-canary.canary-demo.svc.cluster.local
             port:
               number: 80
           weight: 0
