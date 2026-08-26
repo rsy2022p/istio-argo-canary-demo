@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 
-VERSION = os.getenv("VERSION", "v5")
+VERSION = os.getenv("VERSION", "v6")
 
 
 class Handler(BaseHTTPRequestHandler):
