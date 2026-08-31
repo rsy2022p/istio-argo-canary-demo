@@ -14,6 +14,8 @@ spec:
 
 
       steps:
+        - setCanaryScale:
+            replicas: 1
         - pause: {}
 
   selector:
