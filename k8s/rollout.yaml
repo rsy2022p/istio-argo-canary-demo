@@ -34,7 +34,7 @@ spec:
       containers:
         - name: product
 
-          image: ghcr.io/rsy2022p/istio-argo-canary-demo:product-fe393f7
+          image: ghcr.io/rsy2022p/istio-argo-canary-demo:product-3ad8702
 
           imagePullPolicy: IfNotPresent
 
