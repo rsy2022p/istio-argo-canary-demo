@@ -13,7 +13,7 @@ spec:
 
   http:
 
-    # Specific customers always go to canary
+    # Pilot customers always go to canary
     - name: customer-canary
       match:
         - headers:
@@ -30,7 +30,7 @@ spec:
               number: 80
           weight: 100
 
-    # Normal traffic is controlled by Argo Rollouts
+    # Everyone else always goes to stable
     - name: primary
       route:
         - destination:
@@ -38,3 +38,9 @@ spec:
             port:
               number: 80
           weight: 100
+
+        - destination:
+            host: product-canary.canary-demo.svc.cluster.local
+            port:
+              number: 80
+          weight: 0

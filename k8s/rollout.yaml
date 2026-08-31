@@ -12,10 +12,22 @@ spec:
       canaryService: product-canary
       stableService: product-stable
 
+      trafficRouting:
+        istio:
+          virtualService:
+            name: product
+            routes:
+              - primary
 
       steps:
+        # Keep one canary pod running for pilot customers
         - setCanaryScale:
             replicas: 1
+
+        # General traffic remains 100% stable
+        - setWeight: 0
+
+        # Pause for pilot-customer validation
         - pause: {}
 
   selector:
@@ -33,9 +45,7 @@ spec:
 
       containers:
         - name: product
-
           image: ghcr.io/rsy2022p/istio-argo-canary-demo:product-3ad8702
-
           imagePullPolicy: IfNotPresent
 
           env:
