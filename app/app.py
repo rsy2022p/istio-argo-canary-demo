@@ -25,7 +25,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "text/plain")
         self.end_headers()
 
-        response = f"PRODUCT VERSION {VERSION}\n"
+        response = f"PRODUCT VERSION V6-CANARY {VERSION}\n"
         self.wfile.write(response.encode())
 
 
