@@ -12,23 +12,9 @@ spec:
       canaryService: product-canary
       stableService: product-stable
 
-      trafficRouting:
-        istio:
-          virtualService:
-            name: product
-            routes:
-              - primary
 
       steps:
-        - setWeight: 10
         - pause: {}
-        - setWeight: 30
-        - pause: {}
-        - setWeight: 50
-        - pause: {}
-        - setWeight: 70
-        - pause: {}
-        - setWeight: 100
 
   selector:
     matchLabels:

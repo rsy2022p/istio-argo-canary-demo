@@ -38,8 +38,3 @@ spec:
             port:
               number: 80
           weight: 100
-        - destination:
-            host: product-canary.canary-demo.svc.cluster.local
-            port:
-              number: 80
-          weight: 0
