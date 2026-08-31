@@ -3,12 +3,34 @@ kind: VirtualService
 metadata:
   name: product
   namespace: canary-demo
+
 spec:
-  hosts:
-    - product.canary-demo.example.com
   gateways:
     - product-gateway
+
+  hosts:
+    - product.canary-demo.example.com
+
   http:
+
+    # Specific customers always go to canary
+    - name: customer-canary
+      match:
+        - headers:
+            x-customer-id:
+              exact: customer-123
+        - headers:
+            x-customer-id:
+              exact: customer-456
+
+      route:
+        - destination:
+            host: product-canary.canary-demo.svc.cluster.local
+            port:
+              number: 80
+          weight: 100
+
+    # Normal traffic is controlled by Argo Rollouts
     - name: primary
       route:
         - destination:
